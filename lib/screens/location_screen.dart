@@ -1,4 +1,5 @@
 import 'package:clima/screens/city_screen.dart';
+import 'package:clima/screens/detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
 import 'package:clima/services/weather.dart';
@@ -18,6 +19,8 @@ class _LocationScreenState extends State<LocationScreen> {
   String weatherIcon;
   String weatherMessage;
   String cityName;
+  double longitude;
+  double latitude;
 
   @override
   void initState() {
@@ -33,11 +36,15 @@ class _LocationScreenState extends State<LocationScreen> {
         weatherIcon = 'Error';
         weatherMessage = 'Unable to get weather data';
         cityName = '';
+        latitude = 27.887743;
+        longitude = 39.641541;
         return;
       }
       temperature = weatherData['main']['temp'].toInt();
       var condition = weatherData['weather'][0]['id'];
       cityName = weatherData['name'];
+      longitude = weatherData['coord']['lon'].toDouble();
+      latitude = weatherData['coord']['lat'].toDouble();
       weatherIcon = weather.getWeatherIcon(condition);
       weatherMessage = weather.getMessage(temperature);
     });
@@ -68,7 +75,6 @@ class _LocationScreenState extends State<LocationScreen> {
                     onPressed: () async {
                       var weatherData = await weather.getLocationWeather();
                       updateUI(weatherData);
-                      print("bum");
                     },
                     child: Icon(
                       Icons.near_me,
@@ -93,6 +99,25 @@ class _LocationScreenState extends State<LocationScreen> {
                     },
                     child: Icon(
                       Icons.location_city,
+                      size: 50.0,
+                    ),
+                  ),
+                  FlatButton(
+                    onPressed: () async {
+                      var oneCallData =
+                          await weather.getOneCall(longitude, latitude);
+                      print(oneCallData);
+                      print("oneCallDataOnPressed");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DetailScreen(oneCallData: oneCallData),
+                        ),
+                      );
+                    },
+                    child: Icon(
+                      Icons.details,
                       size: 50.0,
                     ),
                   ),

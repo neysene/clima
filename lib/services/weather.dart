@@ -4,6 +4,7 @@ import 'package:clima/internal/keys.dart' as keys;
 
 const apiKey = keys.apiKey;
 const openWeatherMapURL = 'https://api.openweathermap.org/data/2.5/weather';
+const openWeatherOneCall = 'https://api.openweathermap.org/data/2.5/onecall';
 
 class WeatherModel {
   Future<dynamic> getCityWeather(String cityName) async {
@@ -23,6 +24,14 @@ class WeatherModel {
 
     var weatherData = await networkHelper.getData();
     return weatherData;
+  }
+
+  Future<dynamic> getOneCall(double longitude, double latitude) async {
+    NetworkHelper networkHelper = NetworkHelper(
+        '$openWeatherOneCall?lat=$latitude&lon=$longitude&appid=$apiKey&units=metric');
+
+    var oneCallData = await networkHelper.getData();
+    return oneCallData;
   }
 
   String getWeatherIcon(int condition) {
