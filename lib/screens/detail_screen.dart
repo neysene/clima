@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:clima/utilities/constants.dart';
+//import 'package:clima/utilities/constants.dart';
 
 class DetailScreen extends StatelessWidget {
   final oneCallData;
@@ -42,16 +42,6 @@ class DetailScreen extends StatelessWidget {
                       oneCallData['current']['sunset']),
                 ),
               ),
-              FlatButton(
-                onPressed: () {
-                  print('detail/data');
-                  print(oneCallData);
-                },
-                child: Text(
-                  oneCallData['current']['temp'].toString(),
-                  style: kButtonTextStyle,
-                ),
-              ),
             ],
           ),
         ),
@@ -79,8 +69,11 @@ class MyPainter extends CustomPainter {
       ..strokeWidth = 5;
     var icon = Icons.wb_sunny;
     var percentage = (dt - sunrise) / (sunset - sunrise);
-    if ((dt < sunrise) | (dt > sunset)) {
-      percentage += 1.0;
+    if (dt < sunrise) {
+      percentage = (dt - (sunset - 86500)) / (86500 - (sunset - sunrise));
+      icon = Icons.wb_cloudy;
+    } else if (dt > sunset) {
+      percentage = (dt - sunset) / (86500 - (sunset - sunrise));
       icon = Icons.wb_cloudy;
     }
     final sunHorizontal =
